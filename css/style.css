@@ -1,0 +1,1047 @@
+/* ========================================================
+   วันลอยกระทง 3D (Loy Krathong Festival 3D Experience)
+   Styling: Night festival, Thai golden accents, Glassmorphism
+   ======================================================== */
+
+:root {
+  --primary-gold: #ffc837;
+  --secondary-gold: #ff8008;
+  --lotus-pink: #ff4d94;
+  --lotus-pink-light: #ff758c;
+  --water-cyan: #00f2fe;
+  --dark-night: #060b19;
+  --dark-panel: rgba(10, 18, 38, 0.85);
+  --border-glow: rgba(255, 200, 55, 0.35);
+  --font-thai: 'Kanit', 'Prompt', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--dark-night);
+  font-family: var(--font-thai);
+  color: #ffffff;
+}
+
+#canvas-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* Cinematic Night Festival Vignette Overlay */
+#canvas-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 40%, rgba(0, 0, 0, 0) 50%, rgba(4, 9, 24, 0.45) 85%, rgba(2, 5, 15, 0.75) 100%);
+  mix-blend-mode: multiply;
+  z-index: 2;
+}
+
+/* ========================================================
+   LOADING SCREEN
+   ======================================================== */
+#loading-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #11203d 0%, #050b18 100%);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loading-content {
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.moon-loader {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fffdf0 0%, #ffd868 60%, #e29815 100%);
+  box-shadow: 0 0 50px rgba(255, 218, 104, 0.6), 0 0 100px rgba(255, 180, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+  animation: floatMoon 4s ease-in-out infinite alternate;
+}
+
+.krathong-glow {
+  font-size: 55px;
+  animation: pulseGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes floatMoon {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-12px) scale(1.03); }
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(0.95); opacity: 0.85; filter: drop-shadow(0 0 5px #ff4d94); }
+  100% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 20px #ff4d94); }
+}
+
+.festival-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff7ad 0%, #ffa834 50%, #ff4d94 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.festival-subtitle {
+  font-size: 1.05rem;
+  color: #b8c7e0;
+  margin-bottom: 24px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 200, 55, 0.2);
+}
+
+#progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #ff8008, #ffc837, #00f2fe);
+  border-radius: 5px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 200, 55, 0.8);
+}
+
+#loading-text {
+  font-size: 0.95rem;
+  color: #ffd868;
+  min-height: 24px;
+  margin-bottom: 20px;
+}
+
+.audio-notice {
+  font-size: 0.82rem;
+  color: #8da2c4;
+  margin-top: 15px;
+}
+
+/* ========================================================
+   BUTTONS
+   ======================================================== */
+.glow-button {
+  background: linear-gradient(135deg, #ff8008, #ffc837);
+  color: #2b1700;
+  border: none;
+  padding: 14px 34px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-family: var(--font-thai);
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255, 168, 52, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  transition: all 0.25s ease;
+}
+
+.glow-button:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 28px rgba(255, 168, 52, 0.7);
+}
+
+.glow-button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.glow-button.large {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.25rem;
+}
+
+/* ========================================================
+   HEADS-UP DISPLAY (HUD)
+   ======================================================== */
+#hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px 24px;
+}
+
+.hud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.festival-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--dark-panel);
+  border: 1px solid var(--border-glow);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: 30px;
+  pointer-events: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.festival-badge .icon {
+  font-size: 1.8rem;
+  filter: drop-shadow(0 0 8px #ffd868);
+}
+
+.badge-title {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary-gold);
+}
+
+.badge-sub {
+  display: block;
+  font-size: 0.78rem;
+  color: #cfd8dc;
+}
+
+.hud-top-actions {
+  display: flex;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.hud-btn {
+  background: var(--dark-panel);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--font-thai);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.hud-btn:hover {
+  background: rgba(255, 200, 55, 0.25);
+  border-color: var(--primary-gold);
+  transform: translateY(-2px);
+}
+
+.hud-btn.active {
+  border-color: var(--primary-gold);
+  color: var(--primary-gold);
+}
+
+/* Objective Card */
+.hud-card {
+  background: var(--dark-panel);
+  border: 1px solid var(--border-glow);
+  backdrop-filter: blur(10px);
+  padding: 12px 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+}
+
+#objective-box {
+  position: absolute;
+  top: 76px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 360px;
+  animation: fadeIn 0.5s ease;
+}
+
+.obj-icon {
+  font-size: 1.5rem;
+}
+
+.obj-label {
+  font-size: 0.75rem;
+  color: var(--primary-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.obj-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #f1f5f9;
+}
+
+/* Krathong Slot */
+.krathong-inventory {
+  position: absolute;
+  top: 76px;
+  right: 24px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slot-title {
+  font-size: 0.78rem;
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.slot-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.slot-body.empty {
+  color: #8da2c4;
+}
+
+.slot-icon {
+  font-size: 1.4rem;
+}
+
+.mini-btn {
+  background: linear-gradient(135deg, #00f2fe, #4facfe);
+  color: #042033;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-family: var(--font-thai);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: transform 0.2s;
+}
+
+.mini-btn:hover {
+  transform: scale(1.03);
+}
+
+/* Interaction Prompt (Press E) */
+.interaction-pill {
+  position: absolute;
+  bottom: 110px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid var(--primary-gold);
+  backdrop-filter: blur(10px);
+  padding: 10px 22px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 0 25px rgba(255, 200, 55, 0.5);
+  pointer-events: auto;
+  animation: bouncePill 1.5s infinite;
+}
+
+@keyframes bouncePill {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -6px); }
+}
+
+.key-badge {
+  background: linear-gradient(135deg, #ffc837, #ff8008);
+  color: #1a0f00;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
+
+.prompt-text {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* PC Controls Hint at Bottom */
+.pc-controls-hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: #a0aec0;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+}
+
+.pc-controls-hint kbd {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #ffffff;
+  font-weight: 600;
+  margin-right: 3px;
+}
+
+/* Mobile Controls */
+#mobile-controls {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#joystick-zone {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  width: 140px;
+  height: 140px;
+  pointer-events: auto;
+}
+
+#joystick-base {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 2px solid rgba(255, 200, 55, 0.3);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#joystick-thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffc837 0%, #ff8008 100%);
+  box-shadow: 0 0 15px rgba(255, 200, 55, 0.7);
+  position: absolute;
+  touch-action: none;
+}
+
+.mobile-action-buttons {
+  position: absolute;
+  bottom: 30px;
+  right: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.touch-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--dark-panel);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-family: var(--font-thai);
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.touch-btn.primary {
+  background: linear-gradient(135deg, #ff8008, #ffc837);
+  color: #2b1700;
+  border: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  box-shadow: 0 0 20px rgba(255, 200, 55, 0.6);
+}
+
+.touch-btn:active {
+  transform: scale(0.92);
+}
+
+/* ========================================================
+   MODALS
+   ======================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 9, 20, 0.82);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-window {
+  background: linear-gradient(145deg, #101c38 0%, #081022 100%);
+  border: 2px solid var(--border-glow);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 200, 55, 0.2);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 200, 55, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 1.4rem;
+  color: var(--primary-gold);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #a0aec0;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 200, 55, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Krathong Shop Content */
+.stall-intro {
+  font-size: 0.95rem;
+  color: #fce79f;
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.krathong-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.krathong-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 12px 10px;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.krathong-card:hover {
+  border-color: var(--primary-gold);
+  background: rgba(255, 200, 55, 0.08);
+  transform: translateY(-3px);
+}
+
+.krathong-card.selected {
+  border-color: var(--primary-gold);
+  background: rgba(255, 200, 55, 0.15);
+  box-shadow: 0 0 15px rgba(255, 200, 55, 0.4);
+}
+
+.card-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #ff8008;
+  color: #ffffff;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.card-badge.luxury { background: #9d4edd; }
+.card-badge.green { background: #2ec4b6; }
+.card-badge.neon { background: #ff007f; }
+
+.card-preview {
+  font-size: 2.8rem;
+  margin: 6px 0;
+}
+
+.card-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.card-desc {
+  font-size: 0.75rem;
+  color: #a6b5cc;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  min-height: 38px;
+}
+
+.card-tag {
+  font-size: 0.7rem;
+  padding: 3px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffd868;
+}
+
+/* Custom Section */
+.custom-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 16px;
+}
+
+.custom-section h3 {
+  font-size: 1.1rem;
+  color: var(--primary-gold);
+  margin-bottom: 12px;
+}
+
+.custom-row {
+  margin-bottom: 14px;
+}
+
+.custom-row label {
+  display: block;
+  font-size: 0.85rem;
+  color: #cfd8dc;
+  margin-bottom: 6px;
+}
+
+.color-options {
+  display: flex;
+  gap: 12px;
+}
+
+.color-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.color-dot:hover {
+  transform: scale(1.15);
+}
+
+.color-dot.active {
+  border-color: #ffffff;
+  box-shadow: 0 0 10px #ffffff;
+  transform: scale(1.1);
+}
+
+.coin-options {
+  display: flex;
+  gap: 16px;
+}
+
+.radio-label {
+  font-size: 0.88rem;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wish-text-field {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 200, 55, 0.3);
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-family: var(--font-thai);
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.wish-text-field:focus {
+  outline: none;
+  border-color: var(--primary-gold);
+  box-shadow: 0 0 8px rgba(255, 200, 55, 0.5);
+}
+
+.quick-wishes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.wish-chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 15px;
+  cursor: pointer;
+  color: #cbd5e1;
+  transition: all 0.2s;
+}
+
+.wish-chip:hover {
+  background: rgba(255, 200, 55, 0.2);
+  border-color: var(--primary-gold);
+  color: #ffffff;
+}
+
+/* ========================================================
+   CEREMONY SCREEN
+   ======================================================== */
+.ceremony-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(8, 24, 48, 0.85) 0%, rgba(3, 7, 18, 0.96) 100%);
+  z-index: 150;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  animation: fadeIn 0.8s ease;
+  pointer-events: none;
+}
+
+.ceremony-content {
+  max-width: 580px;
+}
+
+.floating-lotus-icon {
+  font-size: 4rem;
+  margin-bottom: 15px;
+  animation: floatMoon 3s ease-in-out infinite alternate;
+}
+
+.ceremony-title {
+  font-size: 2rem;
+  color: var(--primary-gold);
+  margin-bottom: 14px;
+  text-shadow: 0 0 15px rgba(255, 200, 55, 0.6);
+}
+
+.ceremony-prayer {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #e2e8f0;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.ceremony-wish {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffd868;
+  background: rgba(255, 216, 104, 0.12);
+  border: 1px solid rgba(255, 216, 104, 0.3);
+  padding: 12px 20px;
+  border-radius: 15px;
+  margin-bottom: 18px;
+}
+
+.ceremony-subtext {
+  font-size: 0.95rem;
+  color: var(--water-cyan);
+  letter-spacing: 1px;
+}
+
+/* ========================================================
+   BALLOON MINI-GAME
+   ======================================================== */
+.balloon-window {
+  max-width: 500px;
+}
+
+.game-scoreboard {
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-gold);
+  margin-bottom: 15px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.balloon-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: radial-gradient(circle, #1a2a4c 0%, #0a1324 100%);
+  border-radius: 12px;
+}
+
+.balloon-target {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s;
+  box-shadow: inset -4px -4px 8px rgba(0,0,0,0.4), inset 4px 4px 8px rgba(255,255,255,0.4);
+}
+
+.balloon-target:hover {
+  transform: scale(1.08);
+}
+
+.balloon-target.popped {
+  opacity: 0;
+  transform: scale(1.5);
+  pointer-events: none;
+}
+
+#balloon-status {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #ffd868;
+}
+
+/* ========================================================
+   ESIIMSI FORTUNE MODAL
+   ======================================================== */
+.esiimsi-window {
+  max-width: 460px;
+  text-align: center;
+}
+
+.bamboo-cylinder {
+  font-size: 5rem;
+  margin: 15px 0;
+  animation: floatMoon 2.5s ease-in-out infinite alternate;
+}
+
+.instruction {
+  font-size: 1rem;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+}
+
+.stick-number {
+  font-size: 1.1rem;
+  color: var(--primary-gold);
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.fortune-title {
+  font-size: 1.5rem;
+  color: #ff8008;
+  margin-bottom: 15px;
+}
+
+.fortune-poem {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #f1f5f9;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 16px;
+  border-radius: 12px;
+  border-left: 4px solid var(--primary-gold);
+  text-align: left;
+}
+
+/* ========================================================
+   HELP MODAL
+   ======================================================== */
+.help-window {
+  max-width: 580px;
+}
+
+.help-body h3 {
+  color: var(--primary-gold);
+  margin: 14px 0 8px 0;
+  font-size: 1.1rem;
+}
+
+.help-body ul, .help-body ol {
+  padding-left: 20px;
+  line-height: 1.7;
+  color: #cbd5e1;
+  font-size: 0.92rem;
+}
+
+.help-body kbd {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: var(--primary-gold);
+  font-weight: 600;
+}
+
+/* Toast Message */
+.toast-message {
+  position: fixed;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: rgba(10, 20, 45, 0.95);
+  border: 1px solid var(--primary-gold);
+  color: #ffffff;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 200, 55, 0.4);
+  z-index: 1000;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+}
+
+.toast-message.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ========================================================
+   RESPONSIVE DESIGN (Mobile & Tablet)
+   ======================================================== */
+@media (max-width: 768px) {
+  #hud {
+    padding: 12px;
+  }
+  
+  .festival-badge .badge-sub {
+    display: none;
+  }
+
+  .btn-text {
+    display: none;
+  }
+
+  .hud-btn {
+    padding: 8px 10px;
+    font-size: 1.1rem;
+  }
+
+  #objective-box {
+    top: 60px;
+    left: 12px;
+    max-width: 240px;
+    padding: 8px 12px;
+  }
+
+  .obj-text {
+    font-size: 0.85rem;
+  }
+
+  .krathong-inventory {
+    top: 60px;
+    right: 12px;
+    min-width: 140px;
+    padding: 8px 12px;
+  }
+
+  .slot-desc {
+    display: none;
+  }
+
+  .pc-controls-hint {
+    display: none;
+  }
+
+  #mobile-controls {
+    display: block;
+  }
+
+  .interaction-pill {
+    bottom: 180px;
+    padding: 8px 18px;
+  }
+
+  .krathong-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ceremony-title {
+    font-size: 1.5rem;
+  }
+
+  .ceremony-prayer {
+    font-size: 0.95rem;
+  }
+}

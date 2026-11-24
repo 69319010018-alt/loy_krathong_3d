@@ -1,0 +1,20 @@
+{
+  "name": "loy_krathong_3d",
+  "version": "1.0.0",
+  "description": "3D Loy Krathong Night Festival Game with Three.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "node server.js",
+    "py": "python server.py"
+  },
+  "keywords": [
+    "threejs",
+    "loy-krathong",
+    "3d-game",
+    "thai-festival",
+    "webgl"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}
